@@ -4,8 +4,8 @@ const documentRoutes = require('./documentRoutes');
 const leaveRoutes = require('./leaveRoutes');
 const projectRoutes = require('./projectRoutes');
 const notificationRoutes = require('./notificationRoutes');
-const blogRoutes = require('./blogRoutes'); // Ajouté pour la gestion des articles de blog
-const signatureRoutes = require('./signatureRoutes'); // Ajouté pour la gestion des signatures
+const blogRoutes = require('./blogRoutes');
+const signatureRoutes = require('./signatureRoutes');
 
 const router = express.Router();
 
