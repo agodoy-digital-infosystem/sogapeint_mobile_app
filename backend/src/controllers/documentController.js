@@ -5,10 +5,11 @@ const NotificationService = require('../services/notificationService');
 const multer = require('multer');
 const path = require('path');
 
-// Configure Multer storage
+// Configure Multer storage with environment variable for upload path
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'uploads/documents/');
+        const uploadPath = process.env.DOCUMENT_UPLOAD_PATH || 'uploads/documents/';
+        cb(null, uploadPath);
     },
     filename: function (req, file, cb) {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
@@ -100,6 +101,59 @@ const getDocumentsByProject = async (req, res) => {
     }
 };
 
+const getDocumentById = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const document = await Document.findByPk(id, {
+            attributes: ['id', 'title', 'type', 'projectId', 'companyId', 'uploadedAt', 'signedBy']
+        });
+
+        if (!document) {
+            return res.status(404).json({ message: 'Document not found.' });
+        }
+
+        const fileUrl = `${process.env.BASE_URL}/uploads/documents/${document.id}.pdf`;
+
+        return res.status(200).json({
+            ...document.toJSON(),
+            fileUrl: fileUrl
+        });
+    } catch (error) {
+        return res.status(500).json({ message: 'Server error.', error: error.message });
+    }
+};
+
+const getDocuments = async (req, res) => {
+    const { projectId } = req.query; // Filtre optionnel par projectId
+
+    try {
+        let documents;
+        
+        if (projectId) {
+            // Si projectId est fourni, filtrer par ce projectId
+            documents = await Document.findAll({
+                where: { projectId },
+                attributes: ['id', 'title', 'type', 'projectId', 'companyId', 'uploadedAt', 'signedBy']
+            });
+        } else {
+            // Si aucun projectId, retourner tous les documents
+            documents = await Document.findAll({
+                attributes: ['id', 'title', 'type', 'projectId', 'companyId', 'uploadedAt', 'signedBy']
+            });
+        }
+
+        // Si aucun document trouvé
+        if (!documents || documents.length === 0) {
+            return res.status(404).json({ message: 'No documents found.' });
+        }
+
+        return res.status(200).json(documents);
+    } catch (error) {
+        return res.status(500).json({ message: 'Server error.', error: error.message });
+    }
+};
+
 const signDocument = async (req, res) => {
     const { id } = req.params;
     const userId = req.user.id;
@@ -139,5 +193,7 @@ const signDocument = async (req, res) => {
 module.exports = {
     uploadDocument,
     getDocumentsByProject,
+    getDocumentById,
+    getDocuments,
     signDocument
 };

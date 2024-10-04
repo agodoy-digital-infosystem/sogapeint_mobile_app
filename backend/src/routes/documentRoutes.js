@@ -1,8 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const DocumentController = require('../controllers/documentController');
-const { authenticateJWT } = require('../middlewares/authenticate');
-const { authorizeRoles } = require('../middlewares/authorize');
+const { authenticateToken, authorizeRoles } = require('../middlewares/authMiddleware');
 const multer = require('multer');
 
 // Configure multer for file uploads
@@ -26,12 +25,12 @@ const upload = multer({
 });
 
 // GET /documents
-router.get('/', authenticateJWT, DocumentController.getDocuments);
+router.get('/', authenticateToken, DocumentController.getDocuments);
 
 // POST /documents
-router.post('/', authenticateJWT, authorizeRoles('Admin', 'Collaborateur'), upload.single('file'), DocumentController.uploadDocument);
+router.post('/', authenticateToken, authorizeRoles('Admin', 'Collaborateur'), upload.single('file'), DocumentController.uploadDocument);
 
 // GET /documents/:id
-router.get('/:id', authenticateJWT, DocumentController.getDocumentById);
+router.get('/:id', authenticateToken, DocumentController.getDocumentById);
 
 module.exports = router;

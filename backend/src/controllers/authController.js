@@ -1,8 +1,9 @@
-// src/controllers/authController.js
+// authController.js
 
 const bcrypt = require('bcrypt');
 const { v4: uuidv4 } = require('uuid');
-const User = require('../models/User');
+const { validationResult } = require('express-validator');
+const User = require('../models/userModel');
 const AuthService = require('../services/authService');
 const EmailService = require('../services/emailService');
 
@@ -13,7 +14,7 @@ authController.login = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        // Check if email and password are provided
+        // Validation
         if (!email || !password) {
             return res.status(400).json({ message: 'Email and password are required.' });
         }
@@ -55,28 +56,22 @@ authController.login = async (req, res) => {
 
 // Register Method
 authController.register = async (req, res) => {
+    const { firstName, lastName, email, role, companyId, projectIds } = req.body;
+
+    // Validation simple sans express-validator
+    if (!firstName || !lastName || !email || !role || !companyId) {
+        return res.status(400).json({ message: 'All fields are required.' });
+    }
+
     try {
-        const { firstName, lastName, email, role, companyId, projectIds } = req.body;
-
-        // Validate required fields
-        if (!firstName || !lastName || !email || !role || !companyId) {
-            return res.status(400).json({ message: 'All required fields must be provided.' });
-        }
-
-        // Check if email already exists
         const existingUser = await User.findOne({ where: { email } });
-
         if (existingUser) {
             return res.status(409).json({ message: 'Email already in use.' });
         }
 
-        // Generate a secure random password
         const password = AuthService.generateSecurePassword();
-
-        // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Create new user
         const newUser = await User.create({
             id: uuidv4(),
             firstName,
@@ -88,10 +83,8 @@ authController.register = async (req, res) => {
             password: hashedPassword
         });
 
-        // Send account creation email
         await EmailService.sendAccountCreationEmail(email, password);
 
-        // Prepare user data to return
         const userData = {
             id: newUser.id,
             firstName: newUser.firstName,
@@ -124,7 +117,7 @@ authController.logout = async (req, res) => {
 };
 
 // Request Password Reset Method
-authController.requestPasswordReset = async (req, res) => {
+authController.resetPasswordRequest = async (req, res) => {
     try {
         const { email } = req.body;
 

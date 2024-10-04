@@ -1,18 +1,18 @@
 const express = require('express');
 const router = express.Router();
 const leaveController = require('../controllers/leaveController');
-const { verifyToken, authorizeRoles } = require('../middlewares/auth');
+const { authenticateToken, authorizeRoles } = require('../middlewares/authMiddleware');
 
 // Get all leave requests, with optional status filter
-router.get('/', verifyToken, leaveController.getLeaves);
+router.get('/', authenticateToken, leaveController.getLeaves);
 
 // Submit a new leave request
-router.post('/', verifyToken, authorizeRoles('User', 'Collaborateur'), leaveController.submitLeaveRequest);
+router.post('/', authenticateToken, authorizeRoles('User', 'Collaborateur'), leaveController.createLeave);
 
 // Approve a leave request
-router.put('/:id/approve', verifyToken, authorizeRoles('Manager', 'Admin'), leaveController.approveLeaveRequest);
+router.put('/:id/approve', authenticateToken, authorizeRoles('Manager', 'Admin'), leaveController.approveLeave);
 
 // Reject a leave request
-router.put('/:id/reject', verifyToken, authorizeRoles('Manager', 'Admin'), leaveController.rejectLeaveRequest);
+router.put('/:id/reject', authenticateToken, authorizeRoles('Manager', 'Admin'), leaveController.rejectLeave);
 
 module.exports = router;

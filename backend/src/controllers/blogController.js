@@ -1,7 +1,7 @@
-const BlogPost = require('../models/BlogPost');
+const BlogPost = require('../models/blogPostModel');
 
 // Get all blog posts
-exports.getAllPosts = async (req, res) => {
+exports.getAllBlogPosts = async (req, res) => {
   try {
     const blogPosts = await BlogPost.findAll();
     res.status(200).json(blogPosts);
@@ -11,7 +11,7 @@ exports.getAllPosts = async (req, res) => {
 };
 
 // Get a specific blog post by ID
-exports.getPostById = async (req, res) => {
+exports.getBlogPostById = async (req, res) => {
   try {
     const blogPost = await BlogPost.findByPk(req.params.id);
     if (!blogPost) {
@@ -24,7 +24,7 @@ exports.getPostById = async (req, res) => {
 };
 
 // Create a new blog post
-exports.createPost = async (req, res) => {
+exports.createBlogPost = async (req, res) => {
   try {
     const { title, content, authorId } = req.body;
     const newBlogPost = await BlogPost.create({
@@ -39,7 +39,7 @@ exports.createPost = async (req, res) => {
 };
 
 // Update an existing blog post
-exports.updatePost = async (req, res) => {
+exports.updateBlogPost = async (req, res) => {
   try {
     const { title, content } = req.body;
     const blogPost = await BlogPost.findByPk(req.params.id);
@@ -58,7 +58,7 @@ exports.updatePost = async (req, res) => {
 };
 
 // Delete a blog post
-exports.deletePost = async (req, res) => {
+exports.deleteBlogPost = async (req, res) => {
   try {
     const blogPost = await BlogPost.findByPk(req.params.id);
     if (!blogPost) {

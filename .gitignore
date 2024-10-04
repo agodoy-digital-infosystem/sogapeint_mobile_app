@@ -150,3 +150,5 @@ coverage/
 # Postgres related files
 pgdata/
 pg_dump/
+backend/postgresql-setup.exe
+project_files.md

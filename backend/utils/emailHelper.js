@@ -1,87 +1,56 @@
 const nodemailer = require('nodemailer');
+const fs = require('fs');
+const path = require('path');
+const handlebars = require('handlebars');
 
-// Configure the email transporter using environment variables
 const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: process.env.SMTP_PORT,
-    secure: process.env.SMTP_SECURE === 'true', // true for 465, false for other ports
+    host: process.env.EMAIL_HOST,
+    port: process.env.EMAIL_PORT,
+    secure: process.env.EMAIL_SECURE === 'true',
     auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
     },
 });
 
-// Verify the transporter configuration
-transporter.verify(function(error, success) {
-    if (error) {
-        console.error('Error configuring email transporter:', error);
-    } else {
-        console.log('Email transporter is configured successfully.');
-    }
-});
-
-/**
- * Sends an account creation email to a new user with their login credentials.
- * @param {string} email - The recipient's email address.
- * @param {string} password - The generated password for the user.
- */
-const sendAccountCreationEmail = async (email, password) => {
-    const mailOptions = {
-        from: process.env.FROM_EMAIL,
-        to: email,
-        subject: 'Bienvenue chez Sogapeint - Vos identifiants de connexion',
-        html: `
-            <p>Bonjour,</p>
-            <p>Votre compte a été créé avec succès.</p>
-            <p>Voici vos identifiants de connexion :</p>
-            <ul>
-                <li><strong>Email :</strong> ${email}</li>
-                <li><strong>Mot de passe :</strong> ${password}</li>
-            </ul>
-            <p>Veuillez vous connecter en utilisant le lien suivant :</p>
-            <p><a href="${process.env.FRONTEND_URL}/login">Se connecter</a></p>
-            <p>Merci,<br/>L'équipe Sogapeint</p>
-        `,
-    };
-
-    try {
-        await transporter.sendMail(mailOptions);
-        console.log(`Account creation email sent to ${email}`);
-    } catch (error) {
-        console.error(`Failed to send account creation email to ${email}:`, error);
-        throw error;
-    }
+const loadTemplate = (templateName, variables) => {
+    const filePath = path.join(__dirname, '../templates', `${templateName}.html`);
+    const source = fs.readFileSync(filePath, 'utf8');
+    const template = handlebars.compile(source);
+    return template(variables);
 };
 
-/**
- * Sends a password reset email to the user with a secure reset link.
- * @param {string} email - The recipient's email address.
- * @param {string} token - The password reset token.
- */
-const sendPasswordResetEmail = async (email, token) => {
-    const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
+const sendAccountCreationEmail = (email, password) => {
+    const html = loadTemplate('accountCreation', { 
+        email, 
+        password,
+        frontendUrl: process.env.FRONTEND_URL,
+        currentYear: new Date().getFullYear()
+    });
     const mailOptions = {
-        from: process.env.FROM_EMAIL,
+        from: `"Sogapeint" <${process.env.EMAIL_FROM}>`,
         to: email,
-        subject: 'Réinitialisation de votre mot de passe - Sogapeint',
-        html: `
-            <p>Bonjour,</p>
-            <p>Nous avons reçu une demande de réinitialisation de votre mot de passe.</p>
-            <p>Veuillez cliquer sur le lien suivant pour définir un nouveau mot de passe :</p>
-            <p><a href="${resetLink}">Réinitialiser le mot de passe</a></p>
-            <p>Ce lien est valable pendant 24 heures.</p>
-            <p>Si vous n'avez pas demandé cette réinitialisation, veuillez ignorer cet email.</p>
-            <p>Merci,<br/>L'équipe Sogapeint</p>
-        `,
+        subject: 'Bienvenue chez Sogapeint - Vos identifiants de connexion',
+        html,
     };
 
-    try {
-        await transporter.sendMail(mailOptions);
-        console.log(`Password reset email sent to ${email}`);
-    } catch (error) {
-        console.error(`Failed to send password reset email to ${email}:`, error);
-        throw error;
-    }
+    return transporter.sendMail(mailOptions);
+};
+
+const sendPasswordResetEmail = (email, token) => {
+    const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
+    const html = loadTemplate('passwordReset', { 
+        resetUrl,
+        currentYear: new Date().getFullYear()
+    });
+    const mailOptions = {
+        from: `"Sogapeint" <${process.env.EMAIL_FROM}>`,
+        to: email,
+        subject: 'Réinitialisation de votre mot de passe',
+        html,
+    };
+
+    return transporter.sendMail(mailOptions);
 };
 
 module.exports = {

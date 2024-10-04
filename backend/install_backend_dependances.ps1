@@ -2,7 +2,7 @@
 Write-Host "Installation des dépendances nécessaires pour le backend Node.js..."
 
 # Se positionner dans le dossier backend
-Set-Location "./backend"
+Set-Location "./"
 
 # Initialiser un projet npm
 npm init -y

@@ -1,30 +1,28 @@
-const { DataTypes } = require('sequelize');
+const { Model, DataTypes } = require('sequelize');
+const sequelize = require('../../config/database');
 
-module.exports = (sequelize) => {
-    const Company = sequelize.define('Company', {
-        id: {
-            type: DataTypes.UUID,
-            defaultValue: DataTypes.UUIDV4,
-            primaryKey: true,
-        },
-        name: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        address: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-    }, {
-        tableName: 'companies',
-        timestamps: true,
-        underscored: true,
-    });
+class Company extends Model {}
 
-    Company.associate = (models) => {
-        Company.hasMany(models.Project, { foreignKey: 'companyId' });
-        Company.hasMany(models.User, { foreignKey: 'companyId' });
-    };
+Company.init({
+    id: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        primaryKey: true
+    },
+    name: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    address: {
+        type: DataTypes.STRING,
+        allowNull: false
+    }
+}, {
+    sequelize,
+    modelName: 'Company',
+    tableName: 'companies',
+    timestamps: true,
+    underscored: true
+});
 
-    return Company;
-};
+module.exports = Company;

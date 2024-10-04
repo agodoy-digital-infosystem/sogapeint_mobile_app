@@ -1,5 +1,5 @@
 const { Model, DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+const sequelize = require('../../config/database');
 
 class Project extends Model {}
 
@@ -7,38 +7,38 @@ Project.init({
     id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
-        primaryKey: true,
+        primaryKey: true
     },
     name: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: false
     },
     location: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: false
     },
     companyId: {
         type: DataTypes.UUID,
         allowNull: false,
         references: {
             model: 'companies',
-            key: 'id',
-        },
+            key: 'id'
+        }
     },
     startDate: {
         type: DataTypes.DATE,
-        allowNull: false,
+        allowNull: false
     },
     endDate: {
         type: DataTypes.DATE,
-        allowNull: true,
-    },
+        allowNull: true
+    }
 }, {
     sequelize,
     modelName: 'Project',
     tableName: 'projects',
     timestamps: true,
-    underscored: true,
+    underscored: true
 });
 
 module.exports = Project;

@@ -1,9 +1,9 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../../config/database');
 
-class Notification extends Model {}
+class BlogPost extends Model {}
 
-Notification.init({
+BlogPost.init({
     id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
@@ -17,41 +17,29 @@ Notification.init({
         type: DataTypes.TEXT,
         allowNull: false
     },
-    related_document_id: {
-        type: DataTypes.UUID,
-        allowNull: true,
-        references: {
-            model: 'documents',
-            key: 'id'
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL'
-    },
-    user_id: {
+    author_id: {
         type: DataTypes.UUID,
         allowNull: false,
         references: {
             model: 'users',
             key: 'id'
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
+        }
     },
     created_at: {
         type: DataTypes.DATE,
         allowNull: false,
         defaultValue: DataTypes.NOW
     },
-    is_read: {
-        type: DataTypes.BOOLEAN,
+    updated_at: {
+        type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: false
+        defaultValue: DataTypes.NOW
     }
 }, {
     sequelize,
-    modelName: 'Notification',
-    tableName: 'notifications',
+    modelName: 'BlogPost',
+    tableName: 'blog_posts',
     timestamps: false
 });
 
-module.exports = Notification;
+module.exports = BlogPost;

@@ -1,10 +1,8 @@
-// authService.js
-
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
-const { User, PasswordReset } = require('../models');
-const config = require('../config');
+const User = require('../models/userModel');
+const config = require('../../config');
 
 class AuthService {
     static generateToken(user) {
@@ -28,31 +26,29 @@ class AuthService {
         const token = crypto.randomBytes(32).toString('hex');
         const expires = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
 
-        await PasswordReset.create({
-            userId: user.id,
-            resetToken: token,
-            expiresAt: new Date(expires),
-        });
+        // Mettez à jour le user avec le token et la date d'expiration
+        user.passwordResetToken = token;
+        user.passwordResetExpires = new Date(expires);
+        await user.save();
 
         return token;
     }
 
     static async validatePasswordResetToken(token) {
-        const passwordReset = await PasswordReset.findOne({
+        const user = await User.findOne({
             where: {
-                resetToken: token,
-                expiresAt: {
+                passwordResetToken: token,
+                passwordResetExpires: {
                     [require('sequelize').Op.gt]: new Date(),
                 },
             },
-            include: [User],
         });
 
-        if (!passwordReset) {
+        if (!user) {
             throw new Error('Invalid or expired password reset token');
         }
 
-        return passwordReset.User;
+        return user;
     }
 }
 
