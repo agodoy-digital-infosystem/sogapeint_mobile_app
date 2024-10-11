@@ -1,3 +1,6 @@
+/**
+ * Ce fichier contient le service d'authentification qui gère la génération et la validation des tokens JWT,
+ */
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
