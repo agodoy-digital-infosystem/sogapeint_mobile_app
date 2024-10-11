@@ -1,4 +1,9 @@
 // signatureController.js
+/**
+ * Ce fichier contient les fonctions de contrôleur pour la gestion des signatures électroniques.
+ * 
+ * il utilise les modèles Signature, Document et User pour effectuer les opérations.
+ */
 const Signature = require('../models/signatureModel');
 const Document = require('../models/documentModel');
 const User = require('../models/userModel');
@@ -53,4 +58,4 @@ module.exports = {
     initController,
     submitSignature,
     clearSignature
-};
+};  // Export the controller functions
