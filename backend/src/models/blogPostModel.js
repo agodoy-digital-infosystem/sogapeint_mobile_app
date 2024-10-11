@@ -1,3 +1,9 @@
+/**
+ * ce modèle de document est utilisé pour stocker les informations sur les documents
+ * dans l'application.
+ * 
+ * Il est utilisé pour effectuer des opérations de base de données sur la table des documents.
+ */
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../../config/database');
 
@@ -42,4 +48,4 @@ BlogPost.init({
     timestamps: false
 });
 
-module.exports = BlogPost;
+module.exports = BlogPost; // Export the BlogPost model
