@@ -1,3 +1,6 @@
+/**
+ * The configuration file for the application.
+ */
 require('dotenv').config();
 
 module.exports = {
@@ -21,4 +24,4 @@ module.exports = {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
-};
+};  // Export the configuration object
