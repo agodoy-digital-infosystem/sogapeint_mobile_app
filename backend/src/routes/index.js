@@ -1,3 +1,6 @@
+/**
+ * Ce fichier regroupe toutes les routes de l'application.
+ */
 const express = require('express');
 const authRoutes = require('./authRoutes');
 const documentRoutes = require('./documentRoutes');
