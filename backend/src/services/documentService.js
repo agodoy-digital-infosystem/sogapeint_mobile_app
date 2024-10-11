@@ -1,3 +1,6 @@
+/**
+ * Ce fichier contient les services pour la gestion des documents.
+ */
 const { Document, Project, User, Signature } = require('../models');
 
 const uploadDocument = async (title, type, fileUrl, projectId, companyId) => {
