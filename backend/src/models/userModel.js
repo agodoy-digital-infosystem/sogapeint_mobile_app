@@ -1,3 +1,8 @@
+/**
+ * Ce modèle définit le schéma de la table des utilisateurs dans la base de données.
+ * 
+ * Il est utilisé pour effectuer des opérations de base de données sur la table des utilisateurs.
+ */
 const { Model, DataTypes } = require('sequelize');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
