@@ -1,3 +1,7 @@
+/**
+ * Ce fichier contient les méthodes de contrôleur pour les projets.
+ */
+
 const { Project, User } = require('../models');
 
 const getProjectsByCompany = async (req, res) => {
@@ -63,4 +67,4 @@ module.exports = {
     getProjectsByCompany,
     addUserToProject,
     removeUserFromProject
-};
+}; // Export the controller functions
