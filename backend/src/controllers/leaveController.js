@@ -1,4 +1,10 @@
 // src/controllers/leaveController.js
+/**
+ * This file contains the controller functions for the leave requests.
+ * 
+ * The controller functions are used to handle requests from the leave routes
+ * and interact with the database using the Leave, User, and Project models.
+ */
 
 const { Leave, User, Project } = require('../models');
 const NotificationService = require('../services/notificationService');
@@ -141,4 +147,4 @@ module.exports = {
     createLeave,
     approveLeave,
     rejectLeave
-};
+}; // Export the functions
