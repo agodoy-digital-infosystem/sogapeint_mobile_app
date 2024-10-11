@@ -1,3 +1,9 @@
+/**
+ * This file contains the controller functions for the blog post routes.
+ * The controller functions are used to handle requests from the blog post routes
+ * and interact with the database using the BlogPost model.
+ */
+
 const BlogPost = require('../models/blogPostModel');
 
 // Get all blog posts
@@ -70,4 +76,4 @@ exports.deleteBlogPost = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: 'Error deleting blog post', error });
   }
-};
+}; // Export the controller functions
