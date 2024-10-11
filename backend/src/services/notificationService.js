@@ -1,4 +1,9 @@
 // const admin = require('firebase-admin');
+/**
+ * This file contains the notification service. It is responsible for sending notifications
+ * to users using Firebase Cloud Messaging (FCM) and scheduling notifications for a later time.
+ * This part is commented out temporarily because I haven't implemented the Firebase Cloud Messaging yet.
+ */
 const schedule = require('node-schedule');
 const { Notification, User } = require('../models');
 
