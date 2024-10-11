@@ -1,3 +1,6 @@
+/**
+ * Ce fichier d&finitt les routes pour les opérations d'authentification.
+ */
 const express = require('express');
 const router = express.Router();
 const AuthController = require('../controllers/authController');
