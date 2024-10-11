@@ -1,3 +1,6 @@
+/**
+ * ce fichier définit les routes pour les opérations de document.
+ */
 const express = require('express');
 const router = express.Router();
 const DocumentController = require('../controllers/documentController');
