@@ -1,3 +1,6 @@
+/**
+ * Ce fichier contient les services pour la gestion des projets.
+ */
 const { Project, User } = require('../models');
 
 const getProjectsByCompany = async (companyId) => {
