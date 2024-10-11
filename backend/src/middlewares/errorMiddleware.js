@@ -1,5 +1,7 @@
 // middlewares/errorMiddleware.js
-
+/**
+ * Middleware pour la gestion des erreurs.
+ */
 const errorHandler = (err, req, res, next) => {
     console.error(err.stack);
 
@@ -11,4 +13,4 @@ const errorHandler = (err, req, res, next) => {
     });
 };
 
-module.exports = { errorHandler };
+module.exports = { errorHandler };  // Export the middleware
