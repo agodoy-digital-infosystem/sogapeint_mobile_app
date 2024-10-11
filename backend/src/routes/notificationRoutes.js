@@ -1,3 +1,6 @@
+/**
+ * Ce fichier définit les routes pour les notifications.
+ */
 const express = require('express');
 const router = express.Router();
 const NotificationController = require('../controllers/notificationController');
@@ -12,4 +15,4 @@ router.post('/', authenticateToken, authorizeRoles('Admin'), NotificationControl
 // PUT /notifications/:id/read - Mark a notification as read
 router.put('/:id/read', authenticateToken, NotificationController.markAsRead);
 
-module.exports = router;
+module.exports = router; // Export the router
