@@ -1,4 +1,11 @@
 // notificationController.js
+/**
+ * Ce contrôleur gère les notifications pour les utilisateurs.
+ * 
+ * Il utilise le service de notification pour effectuer les opérations.
+ * Il utilise express-validator pour valider les entrées de l'utilisateur.
+ * Il exporte les fonctions de contrôleur pour être utilisées dans les routes.
+ */
 
 const NotificationService = require('../services/notificationService');
 const { validationResult } = require('express-validator');
@@ -55,4 +62,4 @@ exports.markAsRead = async (req, res) => {
         console.error('Error marking notification as read:', error);
         res.status(500).json({ message: 'Internal server error.' });
     }
-};
+};  // Delete a notification
