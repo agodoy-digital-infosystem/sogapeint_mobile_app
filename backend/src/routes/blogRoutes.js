@@ -1,3 +1,6 @@
+/**
+ * ce fichier définit les routes pour les opérations de blog.
+ */
 const express = require('express');
 const blogController = require('../controllers/blogController');
 const { authenticateToken, authorizeRoles } = require('../middlewares/authMiddleware');
@@ -19,4 +22,4 @@ router.put('/:id', authenticateToken, authorizeRoles('Admin'), blogController.up
 // Supprimer un article de blog existant (Admins seulement)
 router.delete('/:id', authenticateToken, authorizeRoles('Admin'), blogController.deleteBlogPost);
 
-module.exports = router;
+module.exports = router; // Exporter le routeur
