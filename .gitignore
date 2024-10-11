@@ -152,3 +152,7 @@ pgdata/
 pg_dump/
 backend/postgresql-setup.exe
 project_files.md
+
+GPT_DB/
+GPT_DB_2/
+auto_commit.ps1
