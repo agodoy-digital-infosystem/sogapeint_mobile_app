@@ -1,3 +1,6 @@
+/**
+ * Ce fichier définit les routes pour les demandes de congé.
+ */
 const express = require('express');
 const router = express.Router();
 const leaveController = require('../controllers/leaveController');
@@ -15,4 +18,4 @@ router.put('/:id/approve', authenticateToken, authorizeRoles('Manager', 'Admin')
 // Reject a leave request
 router.put('/:id/reject', authenticateToken, authorizeRoles('Manager', 'Admin'), leaveController.rejectLeave);
 
-module.exports = router;
+module.exports = router; // Export the router
