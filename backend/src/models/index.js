@@ -1,3 +1,9 @@
+/**
+ * Ce fichier permet de centraliser les modèles et les associations entre les modèles.
+ * 
+ * Il importe les modèles et les associe entre eux en utilisant Sequelize.
+ * Il exporte les modèles et l'instance Sequelize pour être utilisés dans d'autres fichiers.
+ */
 const sequelize = require('../../config/database');
 
 // Importation des modèles
