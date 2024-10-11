@@ -1,3 +1,6 @@
+/**
+ * Ce fichier définit les routes pour les projets.
+ */
 const express = require('express');
 const router = express.Router();
 const ProjectController = require('../controllers/projectController');
@@ -12,4 +15,4 @@ router.post('/:projectId/users', authenticateToken, authorizeRoles('Admin', 'Man
 // DELETE /projects/:projectId/users/:userId - Remove user from project (Admins and Managers only)
 router.delete('/:projectId/users/:userId', authenticateToken, authorizeRoles('Admin', 'Manager'), ProjectController.removeUserFromProject);
 
-module.exports = router;
+module.exports = router; // Export the router
