@@ -1,4 +1,9 @@
 // authController.js
+/**
+ * Ce fichier contient les méthodes de contrôleur pour l'authentification des utilisateurs.
+ * 
+ * Il utilise les services d'authentification et de courriel pour gérer les opérations.
+ */
 
 const bcrypt = require('bcrypt');
 const { v4: uuidv4 } = require('uuid');
@@ -183,4 +188,4 @@ authController.resetPassword = async (req, res) => {
     }
 };
 
-module.exports = authController;
+module.exports = authController; // Export the controller
