@@ -1,3 +1,8 @@
+/**
+ * ce modèle de document est utilisé pour stocker les informations sur les signatures.
+ * 
+ * Il est utilisé pour effectuer des opérations de base de données sur la table des signatures.
+ */
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../../config/database');
 
