@@ -1,3 +1,6 @@
+/**
+ * Ce fichier définit les services pour les articles de blog.
+ */
 const BlogPost = require('../models/blogPostModel');
 
 class BlogService {
