@@ -1,4 +1,7 @@
 // services/leaveService.js
+/**
+ * Ce fichier contient les services pour la gestion des congés.
+ */
 
 const { Leave, User, Project } = require('../models');
 const NotificationService = require('./notificationService');
