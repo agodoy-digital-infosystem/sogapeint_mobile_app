@@ -1,3 +1,6 @@
+/**
+ * Service for handling signature-related operations.
+ */
 const { Signature, User, Document } = require('../models');
 
 const submitSignature = async (userId, documentId, signatureData) => {
