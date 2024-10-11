@@ -1,4 +1,7 @@
 // services/emailServices.js
+/**
+ * Ce fichier contient les services pour l'envoi d'e-mails.
+ */
 const emailHelper = require('../../utils/emailHelper');
 
 const sendAccountCreationEmail = async (email, password) => {
