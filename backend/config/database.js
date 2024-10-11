@@ -1,4 +1,10 @@
 // config/database.js
+/**
+ * Ce fichier configure une instance Sequelize pour PostgreSQL
+ * et l'exporte pour être utilisée dans d'autres fichiers.
+ * 
+ * Il utilise les configurations d'environnement définies dans le fichier .env.
+ */
 
 const { Sequelize } = require('sequelize');
 const config = require('./env'); // Charge les configurations d'environnement
@@ -17,4 +23,4 @@ const sequelize = new Sequelize(config.database.name, config.database.user, conf
   }
 });
 
-module.exports = sequelize;
+module.exports = sequelize; // Exporte l'instance Sequelize
