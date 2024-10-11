@@ -1,4 +1,13 @@
 // documentController.js
+/**
+ * Ce fichier contient les fonctions de contrôleur pour la gestion des documents.
+ * 
+ * Il utilise les modèles Document, Project et User pour effectuer les opérations.
+ * Il utilise le service de notification pour envoyer des notifications.
+ * Il utilise Multer pour gérer le téléchargement de fichiers.
+ * Il configure le stockage Multer pour enregistrer les fichiers dans le dossier de téléchargement.
+ * Il configure le filtre de fichiers pour n'accepter que les fichiers PDF.
+ */
 
 const { Document, Project, User } = require('../models');
 const NotificationService = require('../services/notificationService');
@@ -196,4 +205,4 @@ module.exports = {
     getDocumentById,
     getDocuments,
     signDocument
-};
+};  // documentController.js
