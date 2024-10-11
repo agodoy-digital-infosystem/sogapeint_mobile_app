@@ -1,3 +1,8 @@
+/**
+ * Ce modèle définit le schéma de la table des entreprises dans la base de données.
+ * 
+ * Il est utilisé pour effectuer des opérations de base de données sur la table des entreprises.
+ */
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../../config/database');
 
