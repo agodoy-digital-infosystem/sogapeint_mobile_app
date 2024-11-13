@@ -9,6 +9,10 @@
 const { Sequelize } = require('sequelize');
 const config = require('./env'); // Charge les configurations d'environnement
 
+// console.log('config.database.name: ', config.database.name);
+// console.log('config.database.user: ', config.database.user);
+// console.log('config.database.password: ', config.database.password);
+
 // Crée une instance Sequelize pour PostgreSQL
 const sequelize = new Sequelize(config.database.name, config.database.user, config.database.password, {
   host: config.database.host,
