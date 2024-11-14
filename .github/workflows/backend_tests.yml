@@ -59,7 +59,9 @@ jobs:
         echo "DB_NAME=${{ env.POSTGRES_DB }}" >> .env
     
     - name: Run tests
-      run: npm test
+      run: |
+        cd $GITHUB_WORKSPACE/backend
+        ./node_modules/.bin/jest
 
     - name: Upload coverage reports
       uses: actions/upload-artifact@v4
