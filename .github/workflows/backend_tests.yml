@@ -15,11 +15,11 @@ jobs:
     steps:
       # Étape 1 : Vérifier le code source
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3  # Mise à jour vers la version v3
 
       # Étape 2 : Configurer Node.js avec la version 20
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3  # Mise à jour vers la version v3
         with:
           node-version: '20'  # Version de Node spécifiée (20.9.0)
 
