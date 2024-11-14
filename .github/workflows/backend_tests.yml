@@ -13,29 +13,35 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Étape 1 : Vérifier le code source
+      # Étape 1 : Vider le cache des dépendances pour une installation propre
+      - name: Clear npm cache
+        run: |
+          npm cache clean --force
+
+      # Étape 2 : Vérifier le code source
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Étape 2 : Configurer Node.js avec la version 20
+      # Étape 3 : Configurer Node.js avec la version 20
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20'
 
-      # Étape 3 : Installer toutes les dépendances de manière stricte
+      # Étape 4 : Installer toutes les dépendances de manière stricte sans utiliser le cache
       - name: Install dependencies
         run: |
           cd backend
-          npm ci --include=dev  # Assure l'installation exacte des dépendances listées dans package-lock.json
+          rm -rf node_modules # Assure que node_modules est complètement propre
+          npm install --include=dev  # Assure l'installation exacte des dépendances listées dans package-lock.json
 
-      # Étape 4 : Vérifier que supertest est bien installé
+      # Étape 5 : Vérifier que supertest est bien installé
       - name: Check installed dependencies
         run: |
           cd backend
           npm list supertest || echo "supertest non installé"
 
-      # Étape 5 : Exécuter les tests avec Jest en spécifiant le dossier de tests
+      # Étape 6 : Exécuter les tests avec Jest en spécifiant le dossier de tests
       - name: Run tests with Jest
         run: |
           cd backend
@@ -43,7 +49,7 @@ jobs:
         env:
           CI: true
 
-      # Étape 6 : Afficher les logs en cas d'échec
+      # Étape 7 : Afficher les logs en cas d'échec
       - name: Show Jest error log
         if: failure()
         run: |
