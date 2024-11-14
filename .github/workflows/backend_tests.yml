@@ -23,21 +23,24 @@ jobs:
         with:
           node-version: '20'
 
-      # Étape 3 : Installation des dépendances dans le répertoire backend
+      # Étape 3 : Installer toutes les dépendances dans le répertoire backend
       - name: Install dependencies
-        working-directory: backend
-        run: npm ci --include=dev
+        run: |
+          cd backend
+          npm ci --include=dev
 
-      # Étape 4 : Exécuter les tests en utilisant le script test du package.json
+      # Étape 4 : Exécuter les tests en utilisant le script `test` de package.json
       - name: Run tests with npm test
-        working-directory: backend
-        run: npm test
+        run: |
+          cd backend
+          npm test
         env:
           CI: true
-          
+
       # Étape 5 : Afficher les logs en cas d'échec
       - name: Show Jest error log
         if: failure()
         run: |
+          cd backend
           echo "Erreur lors de l'exécution des tests. Affichage des logs Jest."
-          cat backend/tests/logs/jest.log || echo "Log Jest non trouvé."
+          cat tests/logs/jest.log || echo "Log Jest non trouvé."
