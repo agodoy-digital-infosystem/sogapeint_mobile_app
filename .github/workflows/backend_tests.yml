@@ -23,11 +23,11 @@ jobs:
         with:
           node-version: '20'
 
-      # Étape 3 : Installer toutes les dépendances avec npm ci
+      # Étape 3 : Installer toutes les dépendances, y compris celles de développement
       - name: Install dependencies
         run: |
           cd backend
-          npm ci  # Utilisation de 'npm ci' pour installer exactement les versions des dépendances listées
+          npm install --include=dev  # Assure l'installation des devDependencies
 
       # Étape 4 : Exécuter les tests avec Jest en spécifiant le dossier de tests
       - name: Run tests with Jest
