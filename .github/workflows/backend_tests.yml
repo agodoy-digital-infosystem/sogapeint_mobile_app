@@ -1,46 +1,64 @@
-name: Test Backend
+name: Node.js CI/CD
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
   pull_request:
-    branches:
-      - main
+    branches: [ "main" ]
+
+env:
+  NODE_VERSION: 20.x
+  POSTGRES_DB: test_db
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
+  POSTGRES_HOST: localhost
+  POSTGRES_PORT: 5432
 
 jobs:
-  test:
+  build-and-test:
     runs-on: ubuntu-latest
 
-    steps:
-      # Étape 1 : Vérifier le code source
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      # Étape 2 : Configurer Node.js avec la version 20
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-
-      # Étape 3 : Installer toutes les dépendances dans le répertoire backend
-      - name: Install dependencies
-        run: |
-          cd backend
-          npm ci --include=dev
-
-      # Étape 4 : Exécuter les tests en utilisant le script `test` de package.json
-      - name: Run tests with npm test
-        run: |
-          cd backend
-          npm test
+    services:
+      postgres:
+        image: postgres:latest
         env:
-          CI: true
+          POSTGRES_DB: ${{ env.POSTGRES_DB }}
+          POSTGRES_USER: ${{ env.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
-      # Étape 5 : Afficher les logs en cas d'échec
-      - name: Show Jest error log
-        if: failure()
-        run: |
-          cd backend
-          echo "Erreur lors de l'exécution des tests. Affichage des logs Jest."
-          cat tests/logs/jest.log || echo "Log Jest non trouvé."
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js ${{ env.NODE_VERSION }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Create .env file
+      run: |
+        touch .env
+        echo "DB_HOST=${{ env.POSTGRES_HOST }}" >> .env
+        echo "DB_PORT=${{ env.POSTGRES_PORT }}" >> .env
+        echo "DB_USER=${{ env.POSTGRES_USER }}" >> .env
+        echo "DB_PASSWORD=${{ env.POSTGRES_PASSWORD }}" >> .env
+        echo "DB_NAME=${{ env.POSTGRES_DB }}" >> .env
+    
+    - name: Run tests
+      run: npm test
+
+    - name: Upload coverage reports
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report
+        path: coverage/
