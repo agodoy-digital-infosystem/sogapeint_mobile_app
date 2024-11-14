@@ -25,23 +25,27 @@ jobs:
 
       # Étape 3 : Installer toutes les dépendances, y compris celles de développement
       - name: Install dependencies
-        run: npm ci --include=dev  # Assure l'installation exacte des dépendances listées dans package-lock.json
-        working-directory: backend
+        run: |
+          cd backend
+          npm ci --include=dev
 
       # Étape 4 : Forcer l'installation de `supertest` si nécessaire
       - name: Ensure supertest is installed
-        run: npm install supertest --save-dev
-        working-directory: backend
+        run: |
+          cd backend
+          npm install supertest --save-dev
 
       # Étape 5 : Vérifier que supertest et jest sont bien installés
       - name: Check installed dependencies
-        run: npm list supertest jest || echo "supertest ou jest non installé"
-        working-directory: backend
+        run: |
+          cd backend
+          npm list supertest jest || echo "supertest ou jest non installé"
 
-      # Étape 6 : Exécuter les tests avec Jest en spécifiant le dossier de tests
-      - name: Run tests with Jest
-        run: npm test
-        working-directory: backend
+      # Étape 6 : Exécuter les tests avec npm test
+      - name: Run tests with npm test
+        run: |
+          cd backend
+          npm test
         env:
           CI: true
 
