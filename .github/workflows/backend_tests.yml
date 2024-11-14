@@ -45,7 +45,7 @@ jobs:
       - name: Run tests with Jest
         run: |
           cd backend
-          npx jest tests --ci --coverage
+          npm test
         env:
           CI: true
 
