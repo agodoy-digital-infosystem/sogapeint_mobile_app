@@ -17,6 +17,9 @@ env:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
 
     services:
       postgres:
@@ -41,6 +44,7 @@ jobs:
       with:
         node-version: ${{ env.NODE_VERSION }}
         cache: 'npm'
+        cache-dependency-path: './backend/package-lock.json'
     
     - name: Install dependencies
       run: npm ci
@@ -61,4 +65,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: coverage-report
-        path: coverage/
+        path: backend/coverage/
