@@ -23,13 +23,19 @@ jobs:
         with:
           node-version: '20'
 
-      # Étape 3 : Installer toutes les dépendances, y compris celles de développement
+      # Étape 3 : Installer toutes les dépendances de manière stricte
       - name: Install dependencies
         run: |
           cd backend
-          npm install --include=dev  # Assure l'installation des devDependencies
+          npm ci --include=dev  # Assure l'installation exacte des dépendances listées dans package-lock.json
 
-      # Étape 4 : Exécuter les tests avec Jest en spécifiant le dossier de tests
+      # Étape 4 : Vérifier que supertest est bien installé
+      - name: Check installed dependencies
+        run: |
+          cd backend
+          npm list supertest || echo "supertest non installé"
+
+      # Étape 5 : Exécuter les tests avec Jest en spécifiant le dossier de tests
       - name: Run tests with Jest
         run: |
           cd backend
@@ -37,7 +43,7 @@ jobs:
         env:
           CI: true
 
-      # Étape 5 : Afficher les logs en cas d'échec
+      # Étape 6 : Afficher les logs en cas d'échec
       - name: Show Jest error log
         if: failure()
         run: |
