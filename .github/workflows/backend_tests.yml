@@ -17,11 +17,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      # Étape 2 : Configurer Node.js (en utilisant une version récente)
+      # Étape 2 : Configurer Node.js avec une version compatible
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16'  # Ou remplace par la version requise, comme '18' si nécessaire
+          node-version: '16'  # Assurez-vous d'utiliser la bonne version, peut-être '18' si nécessaire
 
       # Étape 3 : Installer les dépendances
       - name: Install dependencies
@@ -29,22 +29,17 @@ jobs:
           cd backend
           npm install
 
-      # Étape 4 : Vérifier les installations et les versions
-      - name: Check Node and NPM versions
-        run: |
-          node -v
-          npm -v
-
-      # Étape 5 : Lancer les tests avec Jest en mode CI
-      - name: Run tests
+      # Étape 4 : Lancer les tests avec un try-catch pour capturer les erreurs
+      - name: Run tests with Jest
         run: |
           cd backend
-          npm test -- --ci --coverage
+          npm test -- --ci --coverage || (echo "Tests failed. Check logs." && exit 1)
         env:
           CI: true
 
-      # Étape 6 : Afficher les logs des tests en cas d'erreur
-      - name: Show Jest output on failure
+      # Étape 5 : Afficher les logs en cas d'erreur
+      - name: Show Jest error log
         if: failure()
         run: |
-          cat backend/tests/logs/jest.log || echo "No Jest log file found."
+          echo "Erreur lors de l'exécution des tests. Affichage des logs Jest."
+          cat backend/tests/logs/jest.log || echo "Log Jest non trouvé."
