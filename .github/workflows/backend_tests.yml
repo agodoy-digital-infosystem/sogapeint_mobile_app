@@ -8,11 +8,6 @@ on:
 
 env:
   NODE_VERSION: 20.x
-  POSTGRES_DB: test_db
-  POSTGRES_USER: postgres
-  POSTGRES_PASSWORD: postgres
-  POSTGRES_HOST: localhost
-  POSTGRES_PORT: 5432
 
 jobs:
   build-and-test:
@@ -25,9 +20,9 @@ jobs:
       postgres:
         image: postgres:latest
         env:
-          POSTGRES_DB: ${{ env.POSTGRES_DB }}
-          POSTGRES_USER: ${{ env.POSTGRES_USER }}
-          POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.DB_NAME }}
+          POSTGRES_USER: ${{ secrets.DB_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
         ports:
           - 5432:5432
         options: >-
@@ -50,14 +45,15 @@ jobs:
       run: npm ci
       
     - name: Create .env file
-      run: |
-        touch .env
-        echo "DB_HOST=${{ env.POSTGRES_HOST }}" >> .env
-        echo "DB_PORT=${{ env.POSTGRES_PORT }}" >> .env
-        echo "DB_USER=${{ env.POSTGRES_USER }}" >> .env
-        echo "DB_PASSWORD=${{ env.POSTGRES_PASSWORD }}" >> .env
-        echo "DB_NAME=${{ env.POSTGRES_DB }}" >> .env
+      run: echo "${{ secrets.DOT_ENV }}" | base64 -d > .env
     
+    - name: Initialize database
+      run: |
+        # On s'assure que le fichier existe
+        test -f ../db/full_dump.sql || { echo "Database dump file not found"; exit 1; }
+        # Puis on initialise la base avec le dump
+        PGPASSWORD=${{ secrets.DB_PASSWORD }} psql -h localhost -U ${{ secrets.DB_USER }} -d ${{ secrets.DB_NAME }} -f ../db/full_dump.sql
+
     - name: Run tests
       run: |
         cd $GITHUB_WORKSPACE/backend
