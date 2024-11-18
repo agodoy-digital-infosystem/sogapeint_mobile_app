@@ -20,9 +20,9 @@ jobs:
       postgres:
         image: postgres:latest
         env:
-          POSTGRES_DB: test_db         # Valeurs hardcodées pour le test
-          POSTGRES_USER: postgres      # Service postgres avec utilisateur par défaut
-          POSTGRES_PASSWORD: postgres   # Mot de passe simple pour le test
+          POSTGRES_DB: test_db
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
         ports:
           - 5432:5432
         options: >-
@@ -57,7 +57,9 @@ jobs:
         PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f ./db/full_dump.sql
 
     - name: Run tests
-      run: ./node_modules/.bin/jest
+      working-directory: ./backend  # On s'assure d'être dans le bon dossier
+      run: |
+        npx jest  # On utilise npx pour exécuter jest
 
     - name: Upload coverage reports
       uses: actions/upload-artifact@v4
