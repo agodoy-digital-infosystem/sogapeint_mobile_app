@@ -20,9 +20,9 @@ jobs:
       postgres:
         image: postgres:latest
         env:
-          POSTGRES_DB: ${{ secrets.DB_NAME }}
-          POSTGRES_USER: ${{ secrets.DB_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          POSTGRES_DB: test_db         # Valeurs hardcodées pour le test
+          POSTGRES_USER: postgres      # Service postgres avec utilisateur par défaut
+          POSTGRES_PASSWORD: postgres   # Mot de passe simple pour le test
         ports:
           - 5432:5432
         options: >-
@@ -50,11 +50,11 @@ jobs:
     - name: Initialize database
       working-directory: .
       run: |
-        # Test de connexion basique
-        PGPASSWORD=${{ secrets.DB_PASSWORD }} psql -h localhost -p 5432 -U ${{ secrets.DB_USER }} -d ${{ secrets.DB_NAME }} -c "SELECT 1;"
+        # Test de connexion
+        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -c "SELECT 1"
         
-        # Si la connexion fonctionne, on charge le dump
-        PGPASSWORD=${{ secrets.DB_PASSWORD }} psql -h localhost -p 5432 -U ${{ secrets.DB_USER }} -d ${{ secrets.DB_NAME }} -f ./db/full_dump.sql
+        # Si ok, on charge le dump
+        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f ./db/full_dump.sql
 
     - name: Run tests
       run: ./node_modules/.bin/jest
