@@ -1,0 +1,69 @@
+name: Node.js CI/CD
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  NODE_VERSION: 20.x
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: test_db
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Node.js ${{ env.NODE_VERSION }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: './backend/package-lock.json'
+
+    - name: Install dependencies
+      working-directory: ./backend
+      run: npm ci
+      
+    - name: Create .env file
+      run: echo "${{ secrets.DOT_ENV }}" | base64 -d > ./backend/.env
+    
+    - name: Initialize database
+      working-directory: .
+      run: |
+        # Test de connexion
+        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -c "SELECT 1"
+        
+        # Si ok, on charge le dump
+        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f ./db/full_dump.sql
+
+    - name: Run tests
+      working-directory: ./backend  # On s'assure d'être dans le bon dossier
+      run: |
+        npx jest  # On utilise npx pour exécuter jest
+
+    - name: Upload coverage reports
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report
+        path: backend/coverage/
