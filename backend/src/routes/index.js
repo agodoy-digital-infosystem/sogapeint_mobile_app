@@ -9,6 +9,7 @@ const projectRoutes = require('./projectRoutes');
 const notificationRoutes = require('./notificationRoutes');
 const blogRoutes = require('./blogRoutes');
 const signatureRoutes = require('./signatureRoutes');
+const userRoutes = require('./userRoutes');
 
 const router = express.Router();
 
@@ -32,5 +33,8 @@ router.use('/blog', blogRoutes);
 
 // Routes pour la gestion des signatures
 router.use('/signatures', signatureRoutes);
+
+// Routes pour la gestion des utilisateurs
+router.use('/users', userRoutes);
 
 module.exports = router;
