@@ -48,15 +48,19 @@ jobs:
       run: echo "${{ secrets.DOT_ENV }}" | base64 -d > .env
     
     - name: Initialize database
+      working-directory: .  # On se place à la racine pour accéder au dossier db
       run: |
-        # On s'assure que le fichier existe
-        test -f ../db/full_dump.sql || { echo "Database dump file not found"; exit 1; }
+        # On affiche le contenu du répertoire pour debug
+        ls -la
+        # On vérifie si le fichier existe
+        test -f ./db/full_dump.sql || { echo "Database dump file not found"; exit 1; }
+        # On teste la connexion à la base
+        PGPASSWORD=${{ secrets.DB_PASSWORD }} psql -h localhost -U ${{ secrets.DB_USER }} -d ${{ secrets.DB_NAME }} -c '\l'
         # Puis on initialise la base avec le dump
-        PGPASSWORD=${{ secrets.DB_PASSWORD }} psql -h localhost -U ${{ secrets.DB_USER }} -d ${{ secrets.DB_NAME }} -f ../db/full_dump.sql
+        PGPASSWORD=${{ secrets.DB_PASSWORD }} psql -h localhost -U ${{ secrets.DB_USER }} -d ${{ secrets.DB_NAME }} -f ./db/full_dump.sql
 
     - name: Run tests
       run: |
-        cd $GITHUB_WORKSPACE/backend
         ./node_modules/.bin/jest
 
     - name: Upload coverage reports
