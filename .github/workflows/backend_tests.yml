@@ -46,8 +46,11 @@ jobs:
       run: npm ci
       
     - name: Create .env file
-      run: echo "${{ secrets.DOT_ENV }}" | base64 -d > ./backend/.env
-    
+      run: |
+        mkdir -p ./backend
+        echo "${{ secrets.DOT_ENV }}" | base64 -d > ./backend/.env
+        ls -l ./backend/.env
+
     - name: Initialize database
       working-directory: .
       run: |
@@ -60,7 +63,8 @@ jobs:
     - name: Run tests
       working-directory: ./backend  # On s'assure d'être dans le bon dossier
       run: |
-        npx jest  # On utilise npx pour exécuter jest
+        export NODE_ENV=test
+        npx jest
 
     - name: Upload coverage reports
       uses: actions/upload-artifact@v4
