@@ -29,6 +29,21 @@ const CompanyMock = DBConnectionMock.define('Company', {
     underscored: true
 });
 
+// Définir le modèle Document mock
+const DocumentMock = DBConnectionMock.define('Document', {
+    id: '123e4567-e89b-12d3-a456-426614174003',
+    title: 'Document de Test',
+    type: 'sécurité',
+    project_id: '123e4567-e89b-12d3-a456-426614174004',
+    company_id: '123e4567-e89b-12d3-a456-426614174002',
+    uploaded_at: new Date(),
+    signedBy: ['123e4567-e89b-12d3-a456-426614174005']
+}, {
+    timestamps: true,
+    createdAt: 'created_at',
+    updatedAt: 'updated_at'
+});
+
 // Définir les associations si nécessaire
 BlogPostMock.belongsTo(UserMock, { foreignKey: 'author_id' });
 UserMock.hasMany(BlogPostMock, { foreignKey: 'author_id' });
@@ -37,5 +52,6 @@ module.exports = {
     sequelize: DBConnectionMock,
     User: UserMock,
     BlogPost: BlogPostMock,
-    Company: CompanyMock
+    Company: CompanyMock,
+    Document: DocumentMock
 };
