@@ -19,6 +19,16 @@ const BlogPostMock = DBConnectionMock.define('BlogPost', {
     updated_at: new Date()
 });
 
+// Définir le modèle Company mock
+const CompanyMock = DBConnectionMock.define('Company', {
+    id: '123e4567-e89b-12d3-a456-426614174002',
+    name: 'Entreprise de Test',
+    address: '123 Rue Exemple, Ville Test'
+}, {
+    timestamps: true,
+    underscored: true
+});
+
 // Définir les associations si nécessaire
 BlogPostMock.belongsTo(UserMock, { foreignKey: 'author_id' });
 UserMock.hasMany(BlogPostMock, { foreignKey: 'author_id' });
@@ -26,5 +36,6 @@ UserMock.hasMany(BlogPostMock, { foreignKey: 'author_id' });
 module.exports = {
     sequelize: DBConnectionMock,
     User: UserMock,
-    BlogPost: BlogPostMock
+    BlogPost: BlogPostMock,
+    Company: CompanyMock
 };
