@@ -44,7 +44,18 @@ jobs:
     - name: Install dependencies
       working-directory: ./backend
       run: npm ci
-      
+
+    - name: Verify sequelize-mock installation
+      working-directory: ./backend
+      run: |
+        if [ -d "node_modules/sequelize-mock" ]; then
+          echo "sequelize-mock is installed."
+        else
+          echo "sequelize-mock is NOT installed."
+          ls -la node_modules
+          exit 1
+        fi
+
     - name: Create .env file
       run: |
         mkdir -p ./backend
@@ -54,14 +65,17 @@ jobs:
     - name: Initialize database
       working-directory: .
       run: |
-        # Test de connexion
-        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -c "SELECT 1"
-        
+        # Attendre que PostgreSQL soit prêt
+        until PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -c "SELECT 1"; do
+          echo "Postgres is unavailable - sleeping"
+          sleep 2
+        done
+
         # Si ok, on charge le dump
         PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f ./db/full_dump.sql
 
     - name: Run tests
-      working-directory: ./backend  # On s'assure d'être dans le bon dossier
+      working-directory: ./backend
       run: |
         export NODE_ENV=test
         npx jest
