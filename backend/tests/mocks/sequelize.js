@@ -1,3 +1,4 @@
+// backend/tests/mocks/sequelize.js
 const SequelizeMock = require('sequelize-mock');
 
 // Créer une instance de Sequelize mock
@@ -37,7 +38,25 @@ const DocumentMock = DBConnectionMock.define('Document', {
     project_id: '123e4567-e89b-12d3-a456-426614174004',
     company_id: '123e4567-e89b-12d3-a456-426614174002',
     uploaded_at: new Date(),
-    signedBy: ['123e4567-e89b-12d3-a456-426614174005']
+    signedBy: [], // Définir par défaut à vide
+}, {
+    timestamps: true,
+    createdAt: 'created_at',
+    updatedAt: 'updated_at'
+});
+
+// Définir le modèle Leave mock
+const LeaveMock = DBConnectionMock.define('Leave', {
+    id: '123e4567-e89b-12d3-a456-426614174006',
+    user_id: '123e4567-e89b-12d3-a456-426614174000',
+    type: 'congé annuel',
+    start_date: '2024-12-01',
+    end_date: '2024-12-10',
+    description: 'Congé pour vacances',
+    status: 'en attente',
+    submitted_at: new Date(),
+    created_at: new Date(),
+    updated_at: new Date()
 }, {
     timestamps: true,
     createdAt: 'created_at',
@@ -53,5 +72,6 @@ module.exports = {
     User: UserMock,
     BlogPost: BlogPostMock,
     Company: CompanyMock,
-    Document: DocumentMock
+    Document: DocumentMock,
+    Leave: LeaveMock
 };
