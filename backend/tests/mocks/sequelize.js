@@ -171,6 +171,59 @@ ProjectMock.create = function(data, options) {
 ProjectMock.belongsTo(CompanyMock, { foreignKey: 'companyId' });
 CompanyMock.hasMany(ProjectMock, { foreignKey: 'companyId' });
 
+// Définir le modèle Signature mock
+const SignatureMock = DBConnectionMock.define('Signature', {
+    id: '123e4567-e89b-12d3-a456-426614174008',
+    user_id: '123e4567-e89b-12d3-a456-426614174000', // Référence à UserMock
+    document_id: '123e4567-e89b-12d3-a456-426614174003', // Référence à DocumentMock
+    signature_data: 'Données de signature de test',
+    signed_at: new Date()
+}, {
+    timestamps: false
+});
+
+// Ajouter findByPk en alias de findById pour SignatureMock
+SignatureMock.findByPk = function(id) {
+    return this.findById(id);
+};
+
+// Surcharger la méthode create pour SignatureMock pour inclure les validations manuelles
+SignatureMock.create = function(data, options) {
+    return new Promise((resolve, reject) => {
+        // Valider les champs requis
+        if (!data.user_id) {
+            return reject(new Error('Validation error: user_id is required'));
+        }
+        if (!data.document_id) {
+            return reject(new Error('Validation error: document_id is required'));
+        }
+        if (!data.signature_data) {
+            return reject(new Error('Validation error: signature_data is required'));
+        }
+        if (!data.signed_at) {
+            return reject(new Error('Validation error: signed_at is required'));
+        }
+
+        // Simuler la création réussie
+        resolve({
+            id: '123e4567-e89b-12d3-a456-426614174008',
+            user_id: data.user_id,
+            document_id: data.document_id,
+            signature_data: data.signature_data,
+            signed_at: data.signed_at,
+            created_at: new Date(),
+            updated_at: new Date()
+        });
+    });
+};
+
+// Définir les associations pour SignatureMock
+SignatureMock.belongsTo(UserMock, { foreignKey: 'user_id' });
+UserMock.hasMany(SignatureMock, { foreignKey: 'user_id' });
+
+SignatureMock.belongsTo(DocumentMock, { foreignKey: 'document_id' });
+DocumentMock.hasMany(SignatureMock, { foreignKey: 'document_id' });
+
 module.exports = {
     sequelize: DBConnectionMock,
     User: UserMock,
@@ -179,5 +232,6 @@ module.exports = {
     Document: DocumentMock,
     Leave: LeaveMock,
     Notification: NotificationMock,
-    Project: ProjectMock
+    Project: ProjectMock,
+    Signature: SignatureMock
 };
