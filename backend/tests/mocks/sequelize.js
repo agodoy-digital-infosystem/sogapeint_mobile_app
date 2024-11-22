@@ -63,9 +63,60 @@ const LeaveMock = DBConnectionMock.define('Leave', {
     updatedAt: 'updated_at'
 });
 
-// Définir les associations si nécessaire
+// Définir le modèle Notification mock
+const NotificationMock = DBConnectionMock.define('Notification', {
+    id: '123e4567-e89b-12d3-a456-426614174007',
+    title: 'Notification de Test',
+    content: 'Contenu de la notification de test',
+    related_document_id: '123e4567-e89b-12d3-a456-426614174003', // Référence à DocumentMock
+    user_id: '123e4567-e89b-12d3-a456-426614174000', // Référence à UserMock
+    created_at: new Date(),
+    is_read: false
+}, {
+    timestamps: false
+});
+
+// Ajouter findByPk en alias de findById
+NotificationMock.findByPk = function(id) {
+    return this.findById(id);
+};
+
+// Surcharger la méthode create pour inclure les validations manuelles
+NotificationMock.create = function(data, options) {
+    return new Promise((resolve, reject) => {
+        // Valider les champs requis
+        if (!data.title) {
+            return reject(new Error('Validation error: title is required'));
+        }
+        if (!data.content) {
+            return reject(new Error('Validation error: content is required'));
+        }
+        if (!data.user_id) {
+            return reject(new Error('Validation error: user_id is required'));
+        }
+
+        // Simuler la création réussie
+        resolve({
+            id: '123e4567-e89b-12d3-a456-426614174007',
+            title: data.title,
+            content: data.content,
+            related_document_id: data.related_document_id || '123e4567-e89b-12d3-a456-426614174003',
+            user_id: data.user_id,
+            created_at: new Date(),
+            is_read: false
+        });
+    });
+};
+
+// Définir les associations
 BlogPostMock.belongsTo(UserMock, { foreignKey: 'author_id' });
 UserMock.hasMany(BlogPostMock, { foreignKey: 'author_id' });
+
+NotificationMock.belongsTo(UserMock, { foreignKey: 'user_id' });
+UserMock.hasMany(NotificationMock, { foreignKey: 'user_id' });
+
+NotificationMock.belongsTo(DocumentMock, { foreignKey: 'related_document_id' });
+DocumentMock.hasMany(NotificationMock, { foreignKey: 'related_document_id' });
 
 module.exports = {
     sequelize: DBConnectionMock,
@@ -73,5 +124,6 @@ module.exports = {
     BlogPost: BlogPostMock,
     Company: CompanyMock,
     Document: DocumentMock,
-    Leave: LeaveMock
+    Leave: LeaveMock,
+    Notification: NotificationMock
 };
