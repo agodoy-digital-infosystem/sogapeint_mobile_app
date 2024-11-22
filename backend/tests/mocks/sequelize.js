@@ -118,6 +118,59 @@ UserMock.hasMany(NotificationMock, { foreignKey: 'user_id' });
 NotificationMock.belongsTo(DocumentMock, { foreignKey: 'related_document_id' });
 DocumentMock.hasMany(NotificationMock, { foreignKey: 'related_document_id' });
 
+// Définir le modèle Project mock avec validations manuelles
+const ProjectMock = DBConnectionMock.define('Project', {
+    id: '123e4567-e89b-12d3-a456-426614174005',
+    name: 'Projet de Test',
+    location: 'Lieu de Test',
+    companyId: '123e4567-e89b-12d3-a456-426614174002', // Référence à CompanyMock
+    startDate: new Date('2024-12-01'),
+    endDate: null
+}, {
+    timestamps: true,
+    underscored: true
+});
+
+// Ajouter findByPk en alias de findById pour ProjectMock
+ProjectMock.findByPk = function(id) {
+    return this.findById(id);
+};
+
+// Surcharger la méthode create pour ProjectMock pour inclure les validations manuelles
+ProjectMock.create = function(data, options) {
+    return new Promise((resolve, reject) => {
+        // Valider les champs requis
+        if (!data.name) {
+            return reject(new Error('Validation error: name is required'));
+        }
+        if (!data.location) {
+            return reject(new Error('Validation error: location is required'));
+        }
+        if (!data.companyId) {
+            return reject(new Error('Validation error: companyId is required'));
+        }
+        if (!data.startDate) {
+            return reject(new Error('Validation error: startDate is required'));
+        }
+
+        // Simuler la création réussie
+        resolve({
+            id: '123e4567-e89b-12d3-a456-426614174005',
+            name: data.name,
+            location: data.location,
+            companyId: data.companyId,
+            startDate: data.startDate,
+            endDate: data.endDate || null,
+            created_at: new Date(),
+            updated_at: new Date()
+        });
+    });
+};
+
+// Définir les associations pour ProjectMock
+ProjectMock.belongsTo(CompanyMock, { foreignKey: 'companyId' });
+CompanyMock.hasMany(ProjectMock, { foreignKey: 'companyId' });
+
 module.exports = {
     sequelize: DBConnectionMock,
     User: UserMock,
@@ -125,5 +178,6 @@ module.exports = {
     Company: CompanyMock,
     Document: DocumentMock,
     Leave: LeaveMock,
-    Notification: NotificationMock
+    Notification: NotificationMock,
+    Project: ProjectMock
 };
