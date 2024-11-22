@@ -314,13 +314,27 @@
   "scripts": {
     "test": "jest"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "jest": "^29.7.0",
-    "nodemon": "^3.1.7",
-    "sequelize-cli": "^6.6.2",
-    "supertest": "^7.0.0"
+  "jest": {
+    "reporters": [
+      "default",
+      ["jest-html-reporter", {
+        "outputPath": "./reports/test-report.html",
+        "pageTitle": "Test Report",
+        "theme": "defaultTheme",
+        "includeFailureMsg": true,
+        "includeConsoleLog": true,
+        "sort": "status" 
+        }]
+      ]
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+      "jest": "^29.7.0",
+      "jest-html-reporter": "^3.10.2",
+      "nodemon": "^3.1.7",
+      "sequelize-cli": "^6.6.2",
+      "supertest": "^7.0.0"
+    }
   }
-}
